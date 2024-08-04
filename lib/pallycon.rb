@@ -10,6 +10,7 @@ require_relative "pallycon/configuration"
 require_relative "pallycon/drm"
 require_relative "pallycon/license_token/policy"
 require_relative "pallycon/license_token/attributes"
+require_relative "pallycon/license_token/generator"
 
 module Pallycon
   class Error < StandardError; end
