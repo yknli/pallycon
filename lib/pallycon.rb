@@ -3,6 +3,7 @@
 require_relative "pallycon/version"
 require_relative "pallycon/configuration"
 require_relative "pallycon/drm"
+require_relative "pallycon/license_token/policy"
 
 module Pallycon
   class Error < StandardError; end
