@@ -1,8 +1,10 @@
 module Pallycon
   module LicenseToken
     class Policy
+      IV = '0123456789abcdef' # defined by PALLYCON
 
       MAX_STREAM_PER_USER = 1
+      LICENSE_DURATION    = 600 # seconds
 
       attr_accessor :body
 
@@ -47,6 +49,33 @@ module Pallycon
             ]
           }
         }
+      end
+
+      def encrypt
+        @encrypt ||= Base64.strict_encode64(aes256_cbc_encrypt(Pallycon.configuration.site_key, self.body.to_json, IV))
+      end
+
+      # TODO: should be defined in utils packages
+      def aes256_cbc_encrypt(key, data, iv)
+        key = Digest::SHA256.digest(key) if(key.kind_of?(String) && 32 != key.bytesize)
+        iv = Digest::MD5.digest(iv) if(iv.kind_of?(String) && 16 != iv.bytesize)
+        aes = OpenSSL::Cipher.new('AES-256-CBC')
+        aes.encrypt
+        aes.key = key
+        aes.iv = iv
+        aes.update(data) + aes.final
+      end
+
+      def current_time
+        @current_time ||= Time.now.utc
+      end
+
+      def timestamp
+        @timestamp ||= current_time.strftime('%Y-%m-%dT%TZ')
+      end
+
+      def expire_date
+        @expire_date ||= (current_time + LICENSE_DURATION).strftime('%Y-%m-%dT%TZ')
       end
 
     end

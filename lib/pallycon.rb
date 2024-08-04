@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+require 'base64'
+require 'openssl'
+require 'json'
+require 'digest'
+
 require_relative "pallycon/version"
 require_relative "pallycon/configuration"
 require_relative "pallycon/drm"
